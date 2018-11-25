@@ -1,5 +1,6 @@
-const Mongo = require('./mongodb')
-const Scrapper = require('./scrapper')
+const ProxyGobal = require('./proxy')
+const Mongo = ProxyGobal(require('./mongodb').init())
+const scrapperModule = require('./scrapper')
 const siteTypes = {
     rankingpage: 'RANKING_PAGE'
 }
@@ -8,11 +9,12 @@ if( Argvs[0] === 'dev') console.log('Dev mode, in this mode no data will be stor
 
 async function performScrappAction(url, siteType, selectorQuery, top) {
     try{
-        const mongoInstance =  await Mongo.init(null, null, Argvs[0])
-        const site = await mongoInstance.store('WebSite', {url, siteType, selectorQuery, top})
-        const scrapper = new Scrapper(url, mongoInstance, site._id, Argvs[0])
+        await Mongo.connect()
+        const site = await Mongo.store('WebSite', {url, siteType, selectorQuery, top})
+        const scrapper = ProxyGobal(scrapperModule.init(url, Mongo, site._id))
         await scrapper.start(selectorQuery, site._id)
     }catch(e){
+        console.log(e)
         console.error(`error performScrappAction ${e}`)
     }
   
@@ -47,7 +49,7 @@ const sites = [
     //     },
     // },
     {
-        url: 'https://www.ign.com/lists/top-100-tv-shows/91',
+        url: 'https://www.ign.com/lists/top-100-tv-shows/',
         siteType: siteTypes.rankingpage,
         selectorQuery: {
             set: {
