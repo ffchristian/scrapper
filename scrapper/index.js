@@ -1,63 +1,27 @@
-const osmosis = require('osmosis')
-
-
-class Scrapper{
-    constructor(url, mongodbIntance, webSiteId, mode) {
-        this.url = url
-        this.mongodbIntance = mongodbIntance
-        this.webSiteId = webSiteId
-        this.mode = mode
-    }
-    setUrl(url) {
-        this.url = url
-    }
-    async start(query, webSiteId) {
-        let test = `new osmosis(this.url)`
-        osmosis.get( this.url )
-        Object.entries(query).forEach(([key, value]) =>{
-            if(this.mode === 'dev'){
-                console.log(`Scrapper.start query: key ${key}, value ${JSON.stringify(value)}`)
-            } 
-            test += `.${key}(${JSON.stringify(value)})`
-        })
-        const instance = eval(test)
-        instance.data(async (listing) => {
-            try{
-                if(this.mode === 'dev'){
-                    Object.entries(listing).forEach(([key, value]) =>{
-                        console.log(`Scrapper.start data: key ${key}, value ${JSON.stringify(value)}`)
-                    })
-                } 
-                
-            this.mongodbIntance.store('content', this.entityBuilder(listing, webSiteId), true)
-          
-            }catch(e) {
-                console.log(`error scrapper.start ${e}`)
-                // throw e
-            }
-        })
-        .log(console.log)
-        .error((e => {
-            console.log(`error scrapper.start ${e}`)
-            // throw new Error(e)
-        }))
-        .debug(console.log)
-
-        instance.run(query);
-    }
-    entityBuilder(obj, webSiteId){
-        if(!(obj.titles && obj.pictures && obj.titles.length === obj.pictures.length)) {
-            throw new Error(`inconsistent response  titles ${obj.titles.length}, imgs ${obj.pictures.length}`)
+const Scrapper = require('./scrapper')
+const mode = process.argv.slice(2)[0]
+let handler = {
+    get(target, propKey, receiver) {
+        const origMethod = target[propKey]
+        if(typeof origMethod === 'function'){
+            return function (...args) {
+                let result = origMethod.apply(this, args);
+                return result;
+            };
         }
-        let result = []
-        for(let i = 0, len = obj.titles.length; i < obj.titles.length; i++){
+        return origMethod
+    },
+    set (target, key, value) {
+        return true
+    }
+};
 
-            result.push(
-                { title: obj.titles[i], picture: obj.pictures[i], webSiteId, pos: obj.pos[i]}
-            )
-        }
-        return result
+const factoryProxy = {
+     init(url, mongodbIntance, webSiteId){
+        const instance = new Proxy(new Scrapper(url, mongodbIntance, webSiteId), handler)
+        return instance
+        
     }
 }
 
-module.exports = Scrapper
+module.exports = factoryProxy
