@@ -21,7 +21,6 @@ async function performScrappAction(url, siteType, selectorQuery, top) {
     
 }
 
-
 const sites = [
     // {
     //     url: 'https://www.globaltv.com/shows/',
