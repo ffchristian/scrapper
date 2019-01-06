@@ -2,7 +2,8 @@ const ProxyGobal = require('./proxy')
 const Mongo = ProxyGobal(require('./mongodb').init())
 const scrapperModule = require('./scrapper')
 const siteTypes = {
-    rankingpage: 'RANKING_PAGE'
+    rankingpage: 'RANKING_PAGE',
+    clasificationPages: 'CLASI_PAGE'
 }
 var Argvs = process.argv.slice(2);
 if( Argvs[0] === 'dev') console.log('Dev mode, in this mode no data will be stored to the BD')
@@ -48,17 +49,36 @@ const sites = [
     //     },
     // },
     {
-        url: 'https://www.ign.com/lists/top-100-tv-shows/',
+        url: 'https://www.pelispedia.tv/series/all/',
         siteType: siteTypes.rankingpage,
         selectorQuery: {
+            // find: ' section > div > section > ul > li > a',
+            follow: 'section > div > section > ul > li > a@href',
             set: {
-                pictures: ["body div.item-image-container > img@data-original"],
-                titles: ["#list-nav-panel  a > span.list-item-heading"],
-                pos: ["#list-nav-panel  a > span.list-item-rank"]
-            }
-            
+                pictures: ["div > div > article > div > figure > img@src"],
+                titles: ["#headerHero > header > div.container > h1"],
+                anno: ["#headerHero > header > div > div > span:nth-child(2)"],
+                director: ["#headerHero > header > div > div> span:nth-child(6)"],
+                genero: ["#headerHero > header > div > div > span:nth-child(10)"],
+                pais: ["#headerHero > header > div > div > span:nth-child(14)"],
+                sinopsis: ["#headerHero > header > div > div > span:nth-child(18)"],
+                reparto: ["#headerHero > header > div > div > span:nth-child(22)"]
+            },
+            paginate: '#series > div > ul > li > a@href',
         },
-    }
+    },
+    // {
+    //     url: 'https://www.globaltv.com/shows/',
+    //     siteType: siteTypes.rankingpage,
+    //     selectorQuery: {
+    //         set: {
+    //             "pictures":["section.allShows .row figure > a > img@src"],
+    //             "titles": ["section.allShows .row article.allShows-show  > h3"] 
+    //         },
+    //         // paginate: '#mediumPriorityZone > section > div > ul > li:nth-child(3) > a',
+            
+    //     },
+    // },
 ]
 sites.forEach( site =>{
     performScrappAction(site.url, site.siteType, site.selectorQuery, site.top)
