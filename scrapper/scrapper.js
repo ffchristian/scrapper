@@ -14,11 +14,26 @@ class Scrapper{
     start(query = {}, webSiteId = 1) {
         return new Promise ((res, rej) => {
            try {
-            let test = `new osmosis(this.url)`
+          
+            let test = `new osmosis(this.url)`;
+           if( typeof this.url === 'object') {
+            osmosis.get( this.url.url, this.url.page )
+           } else {
             osmosis.get( this.url )
+           }
+           if(query.length > 0 ) {
+            query.forEach( query => {
+                Object.entries(query).forEach(([key, value]) =>{
+                    test += `.${key}(${JSON.stringify(value)})`
+                })
+            })
+           } else {
             Object.entries(query).forEach(([key, value]) =>{
                 test += `.${key}(${JSON.stringify(value)})`
             })
+           }
+          
+            console.log('h--455', test);
             const instance = eval(test)
             instance.data(async (listing) => {
                 try{

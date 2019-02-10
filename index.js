@@ -48,25 +48,27 @@ const sites = [
             
     //     },
     // },
-    {
-        url: 'https://www.pelispedia.tv/series/all/',
-        siteType: siteTypes.rankingpage,
-        selectorQuery: {
-            // find: ' section > div > section > ul > li > a',
-            follow: 'section > div > section > ul > li > a@href',
-            set: {
-                pictures: ["div > div > article > div > figure > img@src"],
-                titles: ["#headerHero > header > div.container > h1"],
-                anno: ["#headerHero > header > div > div > span:nth-child(2)"],
-                director: ["#headerHero > header > div > div> span:nth-child(6)"],
-                genero: ["#headerHero > header > div > div > span:nth-child(10)"],
-                pais: ["#headerHero > header > div > div > span:nth-child(14)"],
-                sinopsis: ["#headerHero > header > div > div > span:nth-child(18)"],
-                reparto: ["#headerHero > header > div > div > span:nth-child(22)"]
-            },
-            paginate: '#series > div > ul > li > a@href',
-        },
-    },
+    // {
+    //     url: 'https://www.pelispedia.tv/series/all/',
+    //     siteType: siteTypes.rankingpage,
+    //     selectorQuery: {
+    //         // find: ' section > div > section > ul > li > a',
+    //         'body > table > tbody > tr:nth-child(1) > td:nth-child(2) > table > tbody > tr:nth-child(3) > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td:nth-child(2) > span:nth-child(9)',
+    //         // follow: 'section > div > section > ul > li > a@href',
+    //         follow: 'body > table > tbody > tr:nth-child(1) > td:nth-child(2) > table > tbody > tr:nth-child(3) > td > table > tbody > tr > td > table > tbody > tr:nth-child(3) > td > table > tbody > tr > td > table > tbody > tr > td > table > tbody > tr > td > a:nth-child(1)@href',
+    //         set: {
+    //             pictures: ["div > div > article > div > figure > img@src"],
+    //             titles: ["#headerHero > header > div.container > h1"],
+    //             anno: ["#headerHero > header > div > div > span:nth-child(2)"],
+    //             director: ["#headerHero > header > div > div> span:nth-child(6)"],
+    //             genero: ["#headerHero > header > div > div > span:nth-child(10)"],
+    //             pais: ["#headerHero > header > div > div > span:nth-child(14)"],
+    //             sinopsis: ["#headerHero > header > div > div > span:nth-child(18)"],
+    //             reparto: ["#headerHero > header > div > div > span:nth-child(22)"]
+    //         },
+    //         paginate: '#series > div > ul > li > a@href',
+    //     },
+    // },
     // {
     //     url: 'https://www.globaltv.com/shows/',
     //     siteType: siteTypes.rankingpage,
@@ -79,7 +81,21 @@ const sites = [
             
     //     },
     // },
+    
+    {
+        url: 'http://www.repelis.net/',
+        siteType: siteTypes.rankingpage,
+        selectorQuery: [{
+            set: {
+                "titles":[" div > div.peli_txt.bgdeg8.brdr10px.bxshd2.ico_b.p_absolute.pd15px.white > div.plt_tit.bold.fs14px.mgbot10px > h2"]
+            }
+            // paginate: '#cn > div.bkcnpels.br1px.brdr10px.mgtop15px > ul.nav.bgdeg4.bold.brdr10px.bxshd2.clr.fs18px.lnht30px.liasbrdr10px.lstinl.pd10px.txt_cen.white > li > a@href',
+            // paginate: "({ page: +1 }, 50)"
+            
+        }]
+    }
 ]
+
 sites.forEach( site =>{
     performScrappAction(site.url, site.siteType, site.selectorQuery, site.top)
 
