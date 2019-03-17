@@ -83,7 +83,7 @@ class MongoDb{
                 const collection = db.connection.collection(model)
                 const client = db.client
                 const typeInsert = many? 'insertMany': 'insertOne'
-              
+              console.log(data, typeInsert, '?????')
                 collection[typeInsert](data, (err, r) => {
                     assert.equal(null, err)
                     // assert.equal(1, r.insertedCount)

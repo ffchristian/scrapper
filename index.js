@@ -82,21 +82,95 @@ const sites = [
     //     },
     // },
     
+    // {
+    //     url: 'http://www.repelis.net/',
+    //     siteType: siteTypes.rankingpage,
+    //     selectorQuery: [{
+    //         set: {
+    //             "titles":[" div > div.peli_txt.bgdeg8.brdr10px.bxshd2.ico_b.p_absolute.pd15px.white > div.plt_tit.bold.fs14px.mgbot10px > h2"]
+    //         }
+    //         // paginate: '#cn > div.bkcnpels.br1px.brdr10px.mgtop15px > ul.nav.bgdeg4.bold.brdr10px.bxshd2.clr.fs18px.lnht30px.liasbrdr10px.lstinl.pd10px.txt_cen.white > li > a@href',
+    //         // paginate: "({ page: +1 }, 50)"
+            
+    //     }]
+    // },
+    // {
+    //     url: 'https://www.imdb.com/search/keyword',
+    //     siteType: siteTypes.rankingpage,
+    //     selectorQuery: [{
+    //         set: {
+    //             "titles":[".lister.list.detail.sub-list > div.lister-list > div > div.lister-item-content > h3 > a"],
+    //             "titless":["div.aux-content-widget-2.splash > span > div > div > div > div > div > div > div > div > a"]
+    //         }
+    //         // paginate: '#cn > div.bkcnpels.br1px.brdr10px.mgtop15px > ul.nav.bgdeg4.bold.brdr10px.bxshd2.clr.fs18px.lnht30px.liasbrdr10px.lstinl.pd10px.txt_cen.white > li > a@href',
+    //         // paginate: "({ page: +1 }, 50)"
+            
+    //     }]
+    // }
+    // {
+    //     url: 'http://pelisplus.co/series/',
+    //     siteType: siteTypes.series,
+    //     selectorQuery: {
+    //         find: 'div.items-peliculas > a',
+    //         follow: 'div.items-peliculas > a@href',
+    //         set: {
+    //             pictures: ["#cover"],
+    //             titles: ["body > div.container > div.main > div > div.pelicula-info > div.pi-right > div > h1"],
+    //             genre: ["body > div.container > div.main > div > div.pelicula-info > div.pi-right > div > p:nth-child(5) > span:nth-child(2)"],
+    //             sinopsis: ["body > div.container > div.main > div > div.pelicula-info > div.pi-right > div > p:nth-child(6) > span.sinopsis"],
+    //             year: ["body > div.container > div.main > div > div.pelicula-info > div.pi-right > div > p.info-half > span:nth-child(2)"]
+    //         }
+    
+    //     },
+    // }
     {
-        url: 'http://www.repelis.net/',
+        url: 'https://www.repelis.net/?&page=',
         siteType: siteTypes.rankingpage,
         selectorQuery: [{
+            paginate: "x% page: +1 %x, 321",
+            follow: "#cn > div.bkcnpels.br1px.brdr10px.mgtop15px > ul.peliculas.clf.cntclsx4.f_left_li > li > div > div.peli_img_img > a@href",
             set: {
-                "titles":[" div > div.peli_txt.bgdeg8.brdr10px.bxshd2.ico_b.p_absolute.pd15px.white > div.plt_tit.bold.fs14px.mgbot10px > h2"]
+                'pictures': ['tr > td > div > div > img@src'],
+                'titles': ['div.content.f_right > div.details.mgbot20px.p_relative > ul > li:nth-child(1)'],
+                // 'anno': 'tr > td > div > div > ul > li:nth-child(3)',
+                // 'gender': 'tr > td > div > div > ul > li:nth-child(2)',
+                // 'synopsis': 'tr > td > div > div > p',
+                // 'language': 'tr > td > div > div > ul > li:nth-child(4)',
+                // 'quality': 'tr > td > div > div > ul > li:nth-child(5)',
             }
-            // paginate: '#cn > div.bkcnpels.br1px.brdr10px.mgtop15px > ul.nav.bgdeg4.bold.brdr10px.bxshd2.clr.fs18px.lnht30px.liasbrdr10px.lstinl.pd10px.txt_cen.white > li > a@href',
-            // paginate: "({ page: +1 }, 50)"
-            
         }]
     }
+
 ]
 
 sites.forEach( site =>{
     performScrappAction(site.url, site.siteType, site.selectorQuery, site.top)
 
 })
+
+// var osmosis = require('osmosis');
+
+// osmosis
+// .get('https://www.repelis.net/?&page=', { page: 1 })
+// .paginate({ page: +1 }, 321)
+// .follow('#cn > div.bkcnpels.br1px.brdr10px.mgtop15px > ul.peliculas.clf.cntclsx4.f_left_li > li > div > div.peli_img_img > a@href')
+// .set({
+// 'pictures': 'tr > td > div > div > img@src',
+// 'titles': 'tr > td > div > div > ul > li',
+// 'anno': 'tr > td > div > div > ul > li:nth-child(3)',
+// 'gender': 'tr > td > div > div > ul > li:nth-child(2)',
+// 'synopsis': 'tr > td > div > div > p',
+// 'language': 'tr > td > div > div > ul > li:nth-child(4)',
+// 'quality': 'tr > td > div > div > ul > li:nth-child(5)',
+// })
+// .data(function(listing) {
+// // do something with listing data
+// console.log()
+// console.log("============================ RESULT ============================")
+// console.log(listing)
+// console.log("============================ RESULT ============================")
+// console.log()
+// })
+// .log(console.log)
+// .error(console.log)
+// .debug(console.log)
